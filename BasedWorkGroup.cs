@@ -3,10 +3,10 @@ namespace Group
 {
 	public class BasedWorkGroup : WorkGroup
 	{
-        public string BasedWorkName;
-        public string BasedWorkDescription;
-        public string BasedWorkLinks;
-        public string BasedWorkDeadline;
+        public string BasedWorkName { get; private set; }
+        private string BasedWorkDescription;
+        private string BasedWorkLinks;
+        private string BasedWorkDeadline;
 
         public BasedWorkGroup(string basedWorkName, string basedWorkDescription, string basedWorkLinks, string basedWorkDeadline)
 		{
@@ -14,6 +14,11 @@ namespace Group
             BasedWorkDescription = basedWorkDescription;
             BasedWorkLinks = basedWorkLinks;
             BasedWorkDeadline = basedWorkDeadline;
+        }
+
+        public BasedWorkGroup(string basedWorkName)
+        {
+            BasedWorkName = basedWorkName;
         }
 
         public override void Work()

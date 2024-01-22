@@ -3,9 +3,9 @@ namespace Group
 {
 	public class WorkGroup
 	{
-        public string WorkName;
-        public string WorkLinks;
-        public string WorkDeadline;
+        public string WorkName { get; private set; }
+        private string WorkLinks;
+        private string WorkDeadline;
 
         public WorkGroup()
 		{

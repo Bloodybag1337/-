@@ -8,27 +8,29 @@ StudentGroup[] studentGroup = new StudentGroup[]
 };
 
 Console.WriteLine("Список студентов:");
-for (int i = 0; i < studentGroup.Length; i++)                       
-{
-    studentGroup[i].ShowInfo();
-}
-Console.WriteLine();
-Console.WriteLine("Хотите добавить в список ещё одного студента?");
-string userInput = Console.ReadLine().ToLower();
-if (userInput == "да")
-{
-    Array.Resize(ref studentGroup, studentGroup.Length + 1);
-    Console.WriteLine("\nПоочерёдно укажите его имя и фамилию, номер телефона и электронную почту");
-    studentGroup[studentGroup.Length - 1] = new StudentGroup (Console.ReadLine(), Console.ReadLine(), Console.ReadLine());   
-}
-Console.WriteLine("\nНовый студент добавлен!\n");
 for (int i = 0; i < studentGroup.Length; i++)
 {
     studentGroup[i].ShowInfo();
 }
-Console.WriteLine();
-Console.ReadKey();
 
+void AddStudent()
+{
+    Array.Resize(ref studentGroup, studentGroup.Length + 1);
+    Console.WriteLine("\nПоочерёдно укажите его имя и фамилию, номер телефона и электронную почту");
+    studentGroup[studentGroup.Length - 1] = new StudentGroup(Console.ReadLine(), Console.ReadLine(), Console.ReadLine());
+    Console.WriteLine("\nНовый студент добавлен!\n");
+    for (int i = 0; i < studentGroup.Length; i++)
+    {
+        studentGroup[i].ShowInfo();
+    }
+}
+Console.WriteLine("\nХотите добавить в список ещё одного студента?");
+string userInput = Console.ReadLine().ToLower();
+if (userInput == "да")
+{
+    AddStudent();
+}
+Console.WriteLine();
 
 LearnGroup[] learnGroup = new LearnGroup[]
 {
@@ -41,27 +43,31 @@ for (int i = 0; i < learnGroup.Length; i++)
 {
     learnGroup[i].Learn();
 }
-Console.WriteLine("\nХотите удалить какое-то занятие из списка?");
-string userInputTwo = Console.ReadLine().ToLower();
-if (userInputTwo == "да")
+
+void DeleteLessonFromList()
 {
     Console.WriteLine("Выберите порядковый номер от 1 до 3:");
-    int indexToRemove = Convert.ToInt32(Console.ReadLine())-1;
+    int indexToRemove = Convert.ToInt32(Console.ReadLine()) - 1;
     LearnGroup[] newLearnGroup = new LearnGroup[learnGroup.Length - 1];
 
     Array.Copy(learnGroup, 0, newLearnGroup, 0, indexToRemove);
 
     Array.Copy(learnGroup, indexToRemove + 1, newLearnGroup, indexToRemove, learnGroup.Length - indexToRemove - 1);
     learnGroup = newLearnGroup;
-}
-Console.WriteLine("\nЗанятие удалено!\n");
+    Console.WriteLine("\nЗанятие удалено!\n");
 
-for (int i = 0; i < learnGroup.Length; i++)
+    for (int i = 0; i < learnGroup.Length; i++)
+    {
+        learnGroup[i].Learn();
+    }
+}
+Console.WriteLine("\nХотите удалить какое-то занятие из списка?");
+string userInputTwo = Console.ReadLine().ToLower();
+if (userInputTwo == "да")
 {
-    learnGroup[i].Learn();
+    DeleteLessonFromList();
 }
 Console.WriteLine();
-Console.ReadKey();
 
 WorkGroup[] workGroup = new WorkGroup[3]
 {
@@ -74,5 +80,46 @@ for (int i = 0; i < workGroup.Length; i++)
 {
     workGroup[i].Work();
 }
+Console.WriteLine();
 
+void NoteStudentsAssignment()
+{
+    StudentGroup[] newStudent = new StudentGroup[]
+    {
+        new ("Олег Кузнецов"),
+        new ("Михаил Семёнов"),
+        new ("Николай Никитин")
+    };
+
+    BasedWorkGroup newWork = new BasedWorkGroup("обычное задание");
+    TestWorkGroup newWorkTwo = new TestWorkGroup("тестовое задание");
+    ProjectWorkGroup newWorkThree = new ProjectWorkGroup("проектное задание");
+
+    foreach (var student in newStudent)
+    {
+        Console.WriteLine($"Укажите, какие задания принял {student.StudentName}");
+        Console.WriteLine("Если указанный студент не принял задание, введите 0 или 1, если принял");
+        Console.Write($"{newWork.BasedWorkName}: ");
+        int accepted = Convert.ToInt32(Console.ReadLine());
+        if (accepted == 0)
+            Console.WriteLine($"{student.StudentName} не принял ни одной работы\n");
+        if (accepted == 1)
+        {
+            Console.Write($"{newWorkTwo.TestWorkName}: ");
+            accepted = Convert.ToInt32(Console.ReadLine());
+            if (accepted == 0)
+                Console.WriteLine($"{student.StudentName} принял {newWork.BasedWorkName}\n");
+            if (accepted == 1)
+            {
+                Console.Write($"{newWorkThree.ProjectWorkName}: ");
+                accepted = Convert.ToInt32(Console.ReadLine());
+                if (accepted == 0)
+                    Console.WriteLine($"{student.StudentName} принял {newWork.BasedWorkName} и {newWorkTwo.TestWorkName}\n");
+                if (accepted == 1)
+                    Console.WriteLine($"{student.StudentName} принял {newWork.BasedWorkName}, {newWorkTwo.TestWorkName} и {newWorkThree.ProjectWorkName}\n");
+            }
+        }
+    }
+}
+NoteStudentsAssignment();
 Console.ReadKey();

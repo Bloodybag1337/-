@@ -3,10 +3,10 @@ namespace Group
 {
 	public class LearnGroup
 	{
-        public string Date;
-        public string TopicList;
-        public string Comment;
-		public string LessonType;
+        private string Date;
+        private string TopicList;
+        private string Comment;
+        private string LessonType;
 
         public LearnGroup(string date, string topicList, string comment, string lessonType)
 		{

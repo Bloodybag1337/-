@@ -3,15 +3,20 @@ namespace Group
 {
 	public class TestWorkGroup : WorkGroup
 	{
-        public string TestWorkName;
-        public string TestWorkLinks;
-        public string TestWorkDeadline;
+        public string TestWorkName { get; private set; }
+        private string TestWorkLinks;
+        private string TestWorkDeadline;
 
         public TestWorkGroup(string testWorkName, string testWorkLinks, string testWorkDeadline)
 		{
             TestWorkName = testWorkName;
             TestWorkLinks = testWorkLinks;
             TestWorkDeadline = testWorkDeadline;
+        }
+
+        public TestWorkGroup(string testWorkName)
+        {
+            TestWorkName = testWorkName;
         }
 
         public override void Work()
