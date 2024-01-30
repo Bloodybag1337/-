@@ -1,4 +1,5 @@
 ﻿using Group;
+using System.Linq;
 
 StudentGroup[] studentGroup = new StudentGroup[]
 {
@@ -84,41 +85,102 @@ Console.WriteLine();
 
 void NoteStudentsAssignment()
 {
-    StudentGroup[] newStudent = new StudentGroup[]
-    {
+    StudentGroup[] students = new StudentGroup[]
+        {
         new ("Олег Кузнецов"),
         new ("Михаил Семёнов"),
         new ("Николай Никитин")
-    };
+        };
 
-    BasedWorkGroup newWork = new BasedWorkGroup("обычное задание");
-    TestWorkGroup newWorkTwo = new TestWorkGroup("тестовое задание");
-    ProjectWorkGroup newWorkThree = new ProjectWorkGroup("проектное задание");
+    WorkGroup[] works = new WorkGroup[3];
+    works[0] = new BasedWorkGroup("обычное задание");
+    works[1] = new TestWorkGroup("тестовое задание");
+    works[2] = new ProjectWorkGroup("проектное задание");
 
-    foreach (var student in newStudent)
+    Dictionary<string, List<int>> studentTasks = new Dictionary<string, List<int>>();
+
+    foreach (var student in students)
     {
-        Console.WriteLine($"Укажите, какие задания принял {student.StudentName}");
-        Console.WriteLine("Если указанный студент не принял задание, введите 0 или 1, если принял");
-        Console.Write($"{newWork.BasedWorkName}: ");
-        int accepted = Convert.ToInt32(Console.ReadLine());
-        if (accepted == 0)
-            Console.WriteLine($"{student.StudentName} не принял ни одной работы\n");
-        if (accepted == 1)
+        Console.WriteLine($"Поставьте '+', если {student.StudentName} выполнил задание:");
+        List<int> tasks = new List<int>();
+
+        for (int i = 0; i < works.Length; i++)
         {
-            Console.Write($"{newWorkTwo.TestWorkName}: ");
-            accepted = Convert.ToInt32(Console.ReadLine());
-            if (accepted == 0)
-                Console.WriteLine($"{student.StudentName} принял {newWork.BasedWorkName}\n");
-            if (accepted == 1)
+            if (works[i] is BasedWorkGroup)
             {
-                Console.Write($"{newWorkThree.ProjectWorkName}: ");
-                accepted = Convert.ToInt32(Console.ReadLine());
-                if (accepted == 0)
-                    Console.WriteLine($"{student.StudentName} принял {newWork.BasedWorkName} и {newWorkTwo.TestWorkName}\n");
-                if (accepted == 1)
-                    Console.WriteLine($"{student.StudentName} принял {newWork.BasedWorkName}, {newWorkTwo.TestWorkName} и {newWorkThree.ProjectWorkName}\n");
+                BasedWorkGroup basedWorkGroup = (BasedWorkGroup)works[i];
+                Console.Write($"{basedWorkGroup.BasedWorkName}: ");
             }
+
+            if (works[i] is TestWorkGroup)
+            {
+                TestWorkGroup testWorkGroup = (TestWorkGroup)works[i];
+                Console.Write($"{testWorkGroup.TestWorkName}: ");
+            }
+
+            if (works[i] is ProjectWorkGroup)
+            {
+                ProjectWorkGroup projectWorkGroup = (ProjectWorkGroup)works[i];
+                Console.Write($"{projectWorkGroup.ProjectWorkName}: ");
+            }
+
+            string input = Console.ReadLine();
+            string isTaskCompleted = "+";
+            if (input == isTaskCompleted)
+                tasks.Add(i + 1);
         }
+
+        studentTasks.Add(student.StudentName, tasks);
+        Console.WriteLine();
+    }
+    Console.WriteLine("\nСписок заданий, выполненных каждым студентом: ");
+    foreach (var entry in studentTasks)
+    {
+        string student = entry.Key;
+        List<int> tasks = entry.Value;
+
+        Console.Write($"{student}: ");
+        if (tasks.Count > 0)
+            Console.WriteLine(string.Join(", ", tasks));
+        else
+            Console.WriteLine("Нет выполненных заданий");
+    }
+
+    Console.WriteLine("\nСписок студентов, выполнивших конкретное задание: ");
+    for (int i = 0; i < works.Length; i++)
+    {
+        if (works[i] is BasedWorkGroup)
+        {
+            BasedWorkGroup basedWorkGroup = (BasedWorkGroup)works[i];
+            Console.Write($"{basedWorkGroup.BasedWorkName}: ");
+        }
+
+        if (works[i] is TestWorkGroup)
+        {
+            TestWorkGroup testWorkGroup = (TestWorkGroup)works[i];
+            Console.Write($"{testWorkGroup.TestWorkName}: ");
+        }
+
+        if (works[i] is ProjectWorkGroup)
+        {
+            ProjectWorkGroup projectWorkGroup = (ProjectWorkGroup)works[i];
+            Console.Write($"{projectWorkGroup.ProjectWorkName}: ");
+        }
+        List<string> studentsWithTask = new List<string>();
+
+        foreach (var entry in studentTasks)
+        {
+            string student = entry.Key;
+            List<int> tasks = entry.Value;
+
+            if (tasks.Contains(i + 1))
+                studentsWithTask.Add(student);
+        }
+
+        if (studentsWithTask.Count > 0)
+            Console.WriteLine(string.Join(", ", studentsWithTask));
+        else
+            Console.WriteLine("Ни один студент не выполнил это задание");
     }
 }
 NoteStudentsAssignment();
